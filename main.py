@@ -1,6 +1,5 @@
 import pygame
 import random
-from pytmx.util_pygame import load_pygame
 from os.path import join
 
 from settings import * 
@@ -11,8 +10,8 @@ class Game():
         self.display_surface = pygame.display.set_mode ((WINDOW_WIDTH, WINDOW_HEIGHT)) 
         pygame.display.set_caption("Memory Game by G3") 
         
-        #self.icon = import_image('..', 'memorygame', 'graphics', 'imagens', 'icons', 'icon')
-        self.back_carta = import_image('..', 'memorygame', 'graphics', 'imagens', 'back_carta')
+        #self.icon = import_image('..', 'Memory-Game-by-G3', 'graphics', 'imagens', 'icons', 'icon')
+        self.back_carta = import_image('..', 'Memory-Game-by-G3', 'graphics', 'imagens', 'back_carta')
         self.back_carta = pygame.transform.scale(self.back_carta, (128, 128))
         
         #pygame.display.set_icon(self.icon)

@@ -17,6 +17,7 @@ FPS = 60
 
 # Cores
 BLUE = (162, 202, 255)
+WHITE = (0, 0, 0)
 
 #Colunas
 COLUNAS = {
@@ -57,6 +58,3 @@ COLUNAS = {
                 (400, WINDOW_WIDTH // 2 * 1.4),
                 (500, WINDOW_WIDTH // 2 * 1.4)]
 }
-
-
-

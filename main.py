@@ -13,12 +13,12 @@ class Game():
         #self.icon = import_image('..', 'Memory-Game-by-G3', 'graphics', 'imagens', 'icons', 'icon')
         self.back_carta = import_image('..', 'Memory-Game-by-G3', 'graphics', 'imagens', 'back_carta')
         self.back_carta = pygame.transform.scale(self.back_carta, (128, 128))
+        self.folder = import_folder('..', 'Memory-Game-by-G3', 'graphics', 'imagens', 'matching')
         
         #pygame.display.set_icon(self.icon)
         self.clock = pygame.time.Clock()
         self.new_board = True
         self.board_state = []
-        self.tamanho = []
         
     def run(self):
         while True:
@@ -42,8 +42,11 @@ class Game():
 
         for coluna in coordenadas:
             for coordenada in coluna:
-                self.tamanho.append(coordenada)
                 self.display_surface.blit(self.back_carta, coordenada)
+                
+        for numero in self.board_state:
+            for images in self.folder:
+                pass
 
         pygame.display.update()
         

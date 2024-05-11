@@ -13,7 +13,8 @@ class Game():
         #self.icon = import_image('..', 'Memory-Game-by-G3', 'graphics', 'imagens', 'icons', 'icon')
         self.back_carta = import_image('..', 'Memory-Game-by-G3', 'graphics', 'imagens', 'back_carta')
         self.back_carta = pygame.transform.scale(self.back_carta, (128, 128))
-        self.folder = import_folder('..', 'Memory-Game-by-G3', 'graphics', 'imagens', 'matching')
+        self.matching = import_folder_dict('..', 'Memory-Game-by-G3', 'graphics', 'imagens', 'matching')
+        print(self.matching)
         
         #pygame.display.set_icon(self.icon)
         self.clock = pygame.time.Clock()
@@ -44,10 +45,6 @@ class Game():
             for coordenada in coluna:
                 self.display_surface.blit(self.back_carta, coordenada)
                 
-        for numero in self.board_state:
-            for images in self.folder:
-                pass
-
         pygame.display.update()
         
     def generate_board(self):
@@ -68,6 +65,13 @@ class Game():
             else:
                 used_list.append(piece)
                 
+        return spaces_list
+    
+    def merge(self):
+        imagens_matching = list(self.matching.values()) * 2 
+        random.shuffle(imagens_matching)
+        pass
+        
 if __name__== "__main__":
     game = Game()
     game.run()

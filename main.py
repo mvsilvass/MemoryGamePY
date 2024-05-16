@@ -1,5 +1,6 @@
 import pygame
 import random
+import time
 from os.path import join
 
 from settings import * 
@@ -12,66 +13,80 @@ class Game():
         
         #self.icon = import_image('..', 'Memory-Game-by-G3', 'graphics', 'imagens', 'icons', 'icon')
         self.back_carta = import_image('..', 'Memory-Game-by-G3', 'graphics', 'imagens', 'back_carta')
-        self.back_carta = pygame.transform.scale(self.back_carta, (128, 128))
+        self.back_carta = pygame.transform.scale(self.back_carta, (CARD_WIDTH, CARD_HEIGHT))
         self.matching = import_folder_dict('..', 'Memory-Game-by-G3', 'graphics', 'imagens', 'matching')
-        print(self.matching)
         
         #pygame.display.set_icon(self.icon)
         self.clock = pygame.time.Clock()
-        self.new_board = True
-        self.board_state = []
         
+
+        self.cards = self.init_cards()
+        self.flipped_cards = []
+
     def run(self):
         while True:
             self.clock.tick(FPS)
-            
-            if self.new_board:
-                self.board_state = self.generate_board()
-                self.new_board = False
                 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    self.handle_click(event.pos)
                     
             self.draw_window()
             
     def draw_window(self):
         self.display_surface.fill(BLUE)
         
-        coordenadas = [COLUNAS['coluna1'], COLUNAS['coluna2'], COLUNAS['coluna3'], COLUNAS['coluna4'], COLUNAS['coluna5']]
 
-        for coluna in coordenadas:
+        for coluna in COORDENADAS_IMAGE.values():
             for coordenada in coluna:
                 self.display_surface.blit(self.back_carta, coordenada)
                 
+                
+        for card in self.cards:
+            if card['revealed']:
+                self.display_surface.blit(card['image'], card['position'])
+            else:
+                self.display_surface.blit(self.back_carta, card['position'])
+                
         pygame.display.update()
         
-    def generate_board(self):
-        options_list = []
-        spaces_list = []
-        used_list = []
-    
-        for item in range(30// 2):
-            options_list.append(item)
         
-        for item in range(30):
-            piece = options_list[random.randint(0, len(options_list)-1)]
-            spaces_list.append(piece)
-            
-            if piece in used_list:
-                used_list.remove(piece)
-                options_list.remove(piece)
-            else:
-                used_list.append(piece)
-                
-        return spaces_list
+    def init_cards(self):
+        image_lista = list(self.matching.values())
+        random.shuffle(image_lista)
+        image_lista_nova = [pygame.transform.scale(image, (IMAGE_WIDTH, IMAGE_HEIGHT)) for image in image_lista]
+        image_lista_nova = image_lista * 2
+        
+        random.shuffle(image_lista_nova)
+         
+         
+        print(image_lista_nova)
+        cards = []      
+        
+        for i, coluna in enumerate(COORDENADAS_IMAGE.values()):
+            for j, coordenada in enumerate(coluna):
+                card = {
+                    'image': pygame.transform.scale(image_lista_nova[i * len(COORDENADAS_IMAGE.values()) + j], (IMAGE_WIDTH, IMAGE_HEIGHT)),
+                    'position': coordenada,
+                    'revealed': True,
+                    'matched': False
+                }
+                    
+                cards.append(card)
+                    
+        return cards
     
-    def merge(self):
-        imagens_matching = list(self.matching.values()) * 2 
-        random.shuffle(imagens_matching)
+    
+    def check_matching_cards(self):
         pass
+
         
+    def handle_click(self, pos):
+        pass
+    
 if __name__== "__main__":
     game = Game()
     game.run()

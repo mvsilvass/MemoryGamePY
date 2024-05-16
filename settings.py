@@ -27,8 +27,16 @@ def import_folder_dict(*path):
 	return frames
 
 # Tamanho da janela
-WINDOW_WIDTH = 630
-WINDOW_HEIGHT = 570
+WINDOW_WIDTH = 850
+WINDOW_HEIGHT = 700
+
+# Tamanho das cartas e margem
+CARD_WIDTH = 160
+CARD_HEIGHT = 160
+MARGIN = 10
+
+IMAGE_WIDTH = 128
+IMAGE_HEIGHT = 128
 
 # FPS
 FPS = 60
@@ -37,42 +45,22 @@ FPS = 60
 BLUE = (162, 202, 255)
 WHITE = (0, 0, 0)
 
-#Colunas
-COLUNAS = {
+# Número de colunas e largura de cada coluna
+NUM_COLUNAS = 5
+COL_WIDTH = WINDOW_WIDTH // NUM_COLUNAS
     
-    'coluna1': [(0, WINDOW_WIDTH // 2 * 0),
-                (100, WINDOW_WIDTH // 2 * 0),
-                (200, WINDOW_WIDTH // 2 * 0),
-                (300, WINDOW_WIDTH // 2 * 0),
-                (400, WINDOW_WIDTH // 2 * 0),
-                (500, WINDOW_WIDTH // 2 * 0)],
-     
-    'coluna2': [(0, WINDOW_WIDTH // 2 * 0.35),
-                (100, WINDOW_WIDTH // 2 * 0.35),
-                (200, WINDOW_WIDTH // 2 * 0.35),
-                (300, WINDOW_WIDTH // 2 * 0.35),
-                (400, WINDOW_WIDTH // 2 * 0.35),
-                (500, WINDOW_WIDTH // 2 * 0.35)],
-    
-    'coluna3': [(0, WINDOW_WIDTH // 2 * 0.7),
-                (100, WINDOW_WIDTH // 2 * 0.7),
-                (200, WINDOW_WIDTH // 2 * 0.7),
-                (300, WINDOW_WIDTH // 2 * 0.7),
-                (400, WINDOW_WIDTH // 2 * 0.7),
-                (500, WINDOW_WIDTH // 2 * 0.7)],
-    
-     'coluna4': [(0, WINDOW_WIDTH // 2 * 1.05),
-                (100, WINDOW_WIDTH // 2 * 1.05),
-                (200, WINDOW_WIDTH // 2 * 1.05),
-                (300, WINDOW_WIDTH // 2 * 1.05),
-                (400, WINDOW_WIDTH // 2 * 1.05),
-                (500, WINDOW_WIDTH // 2 * 1.05)],
-     
-  
-    'coluna5': [(0, WINDOW_WIDTH // 2 * 1.4),
-                (100, WINDOW_WIDTH // 2 * 1.4),
-                (200, WINDOW_WIDTH // 2 * 1.4),
-                (300, WINDOW_WIDTH // 2 * 1.4),
-                (400, WINDOW_WIDTH // 2 * 1.4),
-                (500, WINDOW_WIDTH // 2 * 1.4)]
-}
+def calcular_coordenadas_imagens(NUM_COLUNAS, WINDOW_WIDTH, WINDOW_HEIGHT, MARGIN, IMAGE_WIDTH, IMAGE_HEIGHT):
+    coordenadas = {}
+    for i in range(NUM_COLUNAS):
+        coluna = f'coluna{i+1}'
+        coordenadas[coluna] = []
+        for j in range(6):
+            x = j * (IMAGE_WIDTH + MARGIN)
+            y = i * (IMAGE_HEIGHT + MARGIN)
+            coordenadas[coluna].append((x, y))
+    return coordenadas
+
+
+COORDENADAS_IMAGE = calcular_coordenadas_imagens(NUM_COLUNAS, WINDOW_WIDTH, WINDOW_HEIGHT, MARGIN, IMAGE_WIDTH, IMAGE_HEIGHT)
+
+

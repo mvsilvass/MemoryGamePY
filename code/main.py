@@ -40,8 +40,12 @@ class Game():
                 self.display_surface.blit(self.back_carta, coordenada)
                 
         for card in self.cards:
+            card_rect = pygame.Rect(card['position'], (CARD_WIDTH, CARD_HEIGHT))
+            self.display_surface.blit(self.back_carta, card['position'])
+            
             if card['revealed']:
-                self.display_surface.blit(card['image'], card['position'])
+                image_rect = card['image'].get_rect(center=card_rect.center)
+                self.display_surface.blit(card['image'], image_rect.topleft)
             else:
                 self.display_surface.blit(self.back_carta, card['position'])
                 

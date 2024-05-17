@@ -51,5 +51,4 @@ def calcular_coordenadas_imagens(NUM_COLUNAS, WINDOW_WIDTH, WINDOW_HEIGHT, MARGI
             coordenadas[coluna].append((x, y))
     return coordenadas
 
-
 COORDENADAS_IMAGE = calcular_coordenadas_imagens(NUM_COLUNAS, WINDOW_WIDTH, WINDOW_HEIGHT, MARGIN, IMAGE_WIDTH, IMAGE_HEIGHT)

@@ -11,9 +11,9 @@ class Game():
         self.display_surface = pygame.display.set_mode ((WINDOW_WIDTH, WINDOW_HEIGHT)) 
         pygame.display.set_caption("Memory Game by G3") 
         
-        self.back_carta = import_image('..','assets', 'back_carta')
+        self.back_carta = import_image('assets', 'back_carta')
         self.back_carta = pygame.transform.scale(self.back_carta, (CARD_WIDTH, CARD_HEIGHT))
-        self.matching = import_folder('...','assets', 'matching')
+        self.matching = import_folder('assets', 'matching')
    
         self.clock = pygame.time.Clock()
     

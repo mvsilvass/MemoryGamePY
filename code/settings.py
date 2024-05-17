@@ -17,15 +17,6 @@ def import_folder(*path):
 			frames.append(surf)
 	return frames
 
-def import_folder_dict(*path):
-	frames = {}
-	for folder_path, sub_folders, image_names in walk(join(*path)):
-		for image_name in image_names:
-			full_path = join(folder_path, image_name)
-			surf = pygame.image.load(full_path).convert_alpha()
-			frames[image_name.split('.')[0]] = surf
-	return frames
-
 # Tamanho da janela
 WINDOW_WIDTH = 850
 WINDOW_HEIGHT = 700
@@ -62,5 +53,3 @@ def calcular_coordenadas_imagens(NUM_COLUNAS, WINDOW_WIDTH, WINDOW_HEIGHT, MARGI
 
 
 COORDENADAS_IMAGE = calcular_coordenadas_imagens(NUM_COLUNAS, WINDOW_WIDTH, WINDOW_HEIGHT, MARGIN, IMAGE_WIDTH, IMAGE_HEIGHT)
-
-

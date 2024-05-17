@@ -56,7 +56,7 @@ class Game():
         lista_imagens = self.matching * 2
         random.shuffle(lista_imagens)
         cards = []
-
+    
         index = 0
         for coluna in COORDENADAS_IMAGE.values():
             for coordenada in coluna:

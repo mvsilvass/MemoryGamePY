@@ -13,6 +13,9 @@ class Game():
         
         self.back_carta = import_image('assets', 'back_carta')
         self.back_carta = pygame.transform.scale(self.back_carta, (CARD_WIDTH, CARD_HEIGHT))
+        
+        self.front_carta = import_image('assets', 'front_carta')
+        self.front_carta = pygame.transform.scale(self.front_carta, (CARD_WIDTH, CARD_HEIGHT))
         self.matching = import_folder('assets', 'matching')
    
         self.clock = pygame.time.Clock()
@@ -44,6 +47,7 @@ class Game():
             self.display_surface.blit(self.back_carta, card['position'])
             
             if card['revealed']:
+                self.display_surface.blit(self.front_carta, card['position'])
                 image_rect = card['image'].get_rect(center=card_rect.center)
                 self.display_surface.blit(card['image'], image_rect.topleft)
             else:

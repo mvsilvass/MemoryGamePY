@@ -34,7 +34,7 @@ FPS = 60
 
 # Cores
 BLUE = (162, 202, 255)
-WHITE = (0, 0, 0)
+WHITE = (255, 255, 255)
 
 # Número de colunas e largura de cada coluna
 NUM_COLUNAS = 5

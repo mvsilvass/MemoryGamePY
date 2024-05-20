@@ -18,12 +18,12 @@ def import_folder(*path):
 	return frames
 
 # Tamanho da janela
-WINDOW_WIDTH = 850
-WINDOW_HEIGHT = 700
+WINDOW_WIDTH = 865
+WINDOW_HEIGHT = 730
 
 # Tamanho das cartas e margem
-CARD_WIDTH = 160
-CARD_HEIGHT = 160
+CARD_WIDTH = 175
+CARD_HEIGHT = 175
 MARGIN = 10
 
 IMAGE_WIDTH = 128

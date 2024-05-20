@@ -36,7 +36,7 @@ class Game():
             self.draw_window()
             
     def draw_window(self):
-        self.display_surface.fill(BLUE)     
+        self.display_surface.fill(STEELBLUE)     
 
         for coluna in COORDENADAS_IMAGE.values():
             for coordenada in coluna:
@@ -67,7 +67,7 @@ class Game():
                 card = {
                     'image': pygame.transform.scale(lista_imagens[index], (IMAGE_WIDTH, IMAGE_HEIGHT)),
                     'position': coordenada,
-                    'revealed': True,
+                    'revealed': False,
                     'matched': False
                 }
 

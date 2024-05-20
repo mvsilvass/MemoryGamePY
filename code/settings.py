@@ -18,7 +18,7 @@ def import_folder(*path):
 	return frames
 
 # Tamanho da janela
-WINDOW_WIDTH = 865
+WINDOW_WIDTH = 864
 WINDOW_HEIGHT = 730
 
 # Tamanho das cartas e margem
@@ -35,6 +35,9 @@ FPS = 60
 # Cores
 BLUE = (162, 202, 255)
 WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+STEELBLUE = (70,130,180)
+
 
 # Número de colunas e largura de cada coluna
 NUM_COLUNAS = 5

@@ -1,6 +1,6 @@
 import pygame
 import random
-import time
+import numpy as np # type: ignore
 from os.path import join
 
 from settings import * 
@@ -21,6 +21,11 @@ class Game():
         self.clock = pygame.time.Clock()
     
         self.cards = self.init_cards()
+        
+        self.selected_cards = []
+        
+        self.match_delay = 500  # 500 milissegundos (0.5 segundo)
+        self.waiting = False
 
     def run(self):
         while True:
@@ -34,6 +39,9 @@ class Game():
                     self.handle_click(event.pos)
                     
             self.draw_window()
+            
+            if self.waiting and pygame.time.get_ticks() >= self.wait_time:
+                self.check_matching_cards()
             
     def draw_window(self):
         self.display_surface.fill(STEELBLUE)     
@@ -68,7 +76,7 @@ class Game():
                     'image': pygame.transform.scale(lista_imagens[index], (IMAGE_WIDTH, IMAGE_HEIGHT)),
                     'position': coordenada,
                     'revealed': False,
-                    'matched': False
+                    'matched': False,
                 }
 
                 index += 1
@@ -77,12 +85,41 @@ class Game():
         return cards
 
     def check_matching_cards(self):
-        pass
+        if len(self.selected_cards) == 2:
+            card1_index, card2_index = self.selected_cards
+            card1 = self.cards[card1_index]
+            card2 = self.cards[card2_index]
 
-        
+            # Obtendo as imagens das cartas como arrays de pixels
+            image1 = pygame.surfarray.array3d(card1['image'])
+            image2 = pygame.surfarray.array3d(card2['image'])
+
+            # Comparando os arrays de pixels
+            if np.array_equal(image1, image2):
+                card1['matched'] = True
+                card2['matched'] = True
+            else:
+                card1['revealed'] = False
+                card2['revealed'] = False
+
+            self.selected_cards.clear()
+            self.waiting = False
+
     def handle_click(self, pos):
-        pass
-    
+        if self.waiting:
+            return
+        
+        for indice, card in enumerate(self.cards):
+            if not card['revealed'] and not card['matched']:
+                card_rect = pygame.Rect(card['position'], (CARD_WIDTH, CARD_HEIGHT))
+                if card_rect.collidepoint(pos) and not card['revealed'] and not card['matched']:
+                    card['revealed'] = True
+                    self.selected_cards.append(indice) 
+                    if len(self.selected_cards) == 2:
+                        self.wait_time = pygame.time.get_ticks() + self.match_delay
+                        self.waiting = True
+                    break
+                    
 if __name__== "__main__":
     game = Game()
     game.run()

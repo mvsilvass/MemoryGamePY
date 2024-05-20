@@ -16,4 +16,8 @@ python --version
 pip --version
 pip install pygame-ce
 ```
-
+### [Numpy](https://numpy.org) -- Baixe a versão mais recente para Windows.
+Principais comandos:
+```
+pip install numpy
+```

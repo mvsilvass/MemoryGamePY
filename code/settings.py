@@ -37,6 +37,7 @@ BLUE = (162, 202, 255)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 STEELBLUE = (70,130,180)
+GRAY =  (160,160,160)
 
 
 # Número de colunas e largura de cada coluna

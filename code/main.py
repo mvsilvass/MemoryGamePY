@@ -44,7 +44,7 @@ class Game():
                 self.check_matching_cards()
             
     def draw_window(self):
-        self.display_surface.fill(GRAY)     
+        self.display_surface.fill(STEELBLUE)     
 
         for coluna in COORDENADAS_IMAGE.values():
             for coordenada in coluna:

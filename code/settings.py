@@ -38,7 +38,7 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 STEELBLUE = (70,130,180)
 GRAY =  (160,160,160)
-
+RED = (255, 0, 0)
 
 # Número de colunas e largura de cada coluna
 NUM_COLUNAS = 5

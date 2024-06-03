@@ -17,6 +17,22 @@ def import_folder(*path):
 			frames.append(surf)
 	return frames
 
+def calculate_button_positions(buttons, window_width, window_height, gap=10, vertical_offset=100, vertical_gap=10):
+    total_width = sum(button.get_width() for button in buttons) + gap * (len(buttons) - 1)
+    total_height = buttons[0].get_height()
+    
+    start_x = (window_width - total_width) // 2
+    start_y = (window_height - total_height) // 2 + vertical_offset
+    
+    positions = []
+
+    current_x = start_x
+    for button in buttons:
+        positions.append((current_x, start_y))
+        current_x += button.get_width() + gap + vertical_gap
+
+    return positions
+
 # Tamanho da janela
 WINDOW_WIDTH = 864
 WINDOW_HEIGHT = 730

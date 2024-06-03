@@ -4,19 +4,22 @@ import numpy as np # type: ignore
 from os.path import join
 
 from settings import *
+from pygame import mixer
 
 class Game():
     def __init__(self):
         pygame.init()  # Inicia o pygame
+        pygame.mixer.init()  # Inicia o mixer do Pygame para áudio
+        
         self.display_surface = pygame.display.set_mode ((WINDOW_WIDTH, WINDOW_HEIGHT)) # Cria a janela do jogo
         pygame.display.set_caption("Memory Game by G3") # Define o título da janela
         
         # Carrega e redimensiona a imagem "back_carta"
-        self.back_carta = import_image('assets', 'back_carta')
+        self.back_carta = import_image('assets', 'cards','back_carta')
         self.back_carta = pygame.transform.scale(self.back_carta, (CARD_WIDTH, CARD_HEIGHT))
         
         # Carrega e redimensiona a imagem "front_carta"
-        self.front_carta = import_image('assets', 'front_carta')
+        self.front_carta = import_image('assets', 'cards', 'front_carta')
         self.front_carta = pygame.transform.scale(self.front_carta, (CARD_WIDTH, CARD_HEIGHT))
         
         # Carrega as imagens da pasta "matching"
@@ -31,7 +34,28 @@ class Game():
         
         self.match_delay = 500  # Tempo de atraso para verificar o das cartas em milissegundos
         self.waiting = False # Flag para indicar se o jogo está esperando para verificar a correspondência das cartas
+        
+        # Carrega as imagens da pasta "icons" individualmente
+        self.restart_button = import_image('assets', 'icons', 'restart')
+        self.score_button = import_image('assets', 'icons', 'score')
+        self.scoreboard_button = import_image('assets', 'icons', 'scoreboard')
+        self.logout_button = import_image('assets', 'icons', 'logout')
+        
+        buttons = [self.restart_button, self.score_button, self.scoreboard_button, self.logout_button]
+        button_positions = calculate_button_positions(buttons, WINDOW_WIDTH, WINDOW_HEIGHT, vertical_offset=200)
 
+        self.restart_button_rect = self.restart_button.get_rect(topleft=button_positions[0])
+        self.score_button_rect = self.score_button.get_rect(topleft=button_positions[1])
+        self.scoreboard_button_rect = self.scoreboard_button.get_rect(topleft=button_positions[2])
+        self.logout_button_rect = self.logout_button.get_rect(topleft=button_positions[3])
+        
+        self.gameover_sound = pygame.mixer.Sound(join('assets', 'sounds', 'gameover.wav'))
+        self.gameover_sound.set_volume(0.5)
+        self.game_over_timer = None
+        self.game_over_sound_played = False  
+
+        self.game_over = False
+        
     def run(self):
         while True:
             self.clock.tick(FPS) # Define a taxa de quadros por segundo
@@ -43,10 +67,16 @@ class Game():
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1: # Verifica se o botão esquerdo do mouse foi pressionado
                     self.handle_click(event.pos)
                     
+                    if self.restart_button_rect.collidepoint(event.pos):
+                        self.restart_game()
+                    
             self.draw_window()  # Desenha a janela do jogo
             
             if self.waiting and pygame.time.get_ticks() >= self.wait_time: # Verifica se é hora de verificar as cartas correspondentes
                 self.check_matching_cards()
+                
+            if all(card['matched'] for card in self.cards):
+                self.game_over = True   
             
     def draw_window(self):
         self.display_surface.fill(STEELBLUE)   # Preenche o fundo da janela com uma cor definida   
@@ -66,6 +96,26 @@ class Game():
             else:  # Se a carta não estiver revelada, desenha o verso da carta
                 self.display_surface.blit(self.back_carta, card['position'])
                 
+                
+        if self.game_over:
+            self.display_surface.fill(STEELBLUE)
+            
+            # Draw buttons
+            self.display_surface.blit(self.restart_button, self.restart_button_rect.topleft)
+            self.display_surface.blit(self.score_button, self.score_button_rect.topleft)
+            self.display_surface.blit(self.scoreboard_button, self.scoreboard_button_rect.topleft)
+            self.display_surface.blit(self.logout_button, self.logout_button_rect.topleft)
+            
+            if all(card['matched'] for card in self.cards):
+                if not self.game_over:  # Adicione essa verificação
+                    self.game_over = True
+                    self.game_over_sound_played = False  # Reinicia a flag
+
+            if self.game_over and not self.game_over_sound_played:  # Adicione essa verificação
+                self.gameover_sound.play()
+                self.game_over_sound_played = True  # Atualiza a flag
+            
+            
         pygame.display.update()  # Atualiza a tela do display
          
         
@@ -80,8 +130,8 @@ class Game():
                 card = {
                     'image': pygame.transform.scale(lista_imagens[index], (IMAGE_WIDTH, IMAGE_HEIGHT)), # Redimensiona a imagem da carta
                     'position': coordenada,
-                    'revealed': False,  # Inicialmente, todas as cartas estão viradas para baixo
-                    'matched': False,   # Inicialmente, nenhuma carta foi combinada
+                    'revealed': True,  # Inicialmente, todas as cartas estão viradas para baixo
+                    'matched': True,   # Inicialmente, nenhuma carta foi combinada
                 }
 
                 index += 1
@@ -126,8 +176,12 @@ class Game():
                     if len(self.selected_cards) == 2:  # Se duas cartas forem selecionadas, inicia o timer para verificar a correspondência
                         self.wait_time = pygame.time.get_ticks() + self.match_delay
                         self.waiting = True
-                    break
+                    break          
                     
+    def restart_game(self):
+        self.cards = self.init_cards()
+        self.selected_cards = []
+        
 if __name__== "__main__":
     game = Game() # Cria uma instância do jogo
     game.run()    # Inicia o loop principal do jogo

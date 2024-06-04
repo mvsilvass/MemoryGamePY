@@ -17,8 +17,6 @@ def import_folder(*path):
 			frames.append(surf)
 	return frames
 
-
-
 # Tamanho da janela
 WINDOW_WIDTH = 864
 WINDOW_HEIGHT = 730
@@ -31,9 +29,6 @@ MARGIN = 10
 IMAGE_WIDTH = 128
 IMAGE_HEIGHT = 128
 
-BUTTON_WIDTH = 64
-BUTTON_HEIGHT = 64
-
 # FPS
 FPS = 60
 
@@ -43,7 +38,6 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 STEELBLUE = (70,130,180)
 GRAY =  (160,160,160)
-RED = (255, 0, 0)
 
 # Número de colunas e largura de cada coluna
 NUM_COLUNAS = 5

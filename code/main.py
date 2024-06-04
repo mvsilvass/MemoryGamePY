@@ -4,12 +4,15 @@ import numpy as np # type: ignore
 from os.path import join
 
 from settings import *
+
 from pygame import mixer
+from pygame import font
 
 class Game():
     def __init__(self):
         pygame.init()  # Inicia o pygame
         pygame.mixer.init()  # Inicia o mixer do Pygame para áudio
+        pygame.font.init()   # Inicia a font do Pygame 
         
         self.display_surface = pygame.display.set_mode ((WINDOW_WIDTH, WINDOW_HEIGHT)) # Cria a janela do jogo
         pygame.display.set_caption("Memory Game by G3") # Define o título da janela
@@ -37,17 +40,11 @@ class Game():
         
         # Carrega as imagens da pasta "icons" individualmente
         self.restart_button = import_image('assets', 'icons', 'restart')
-        self.score_button = import_image('assets', 'icons', 'score')
-        self.scoreboard_button = import_image('assets', 'icons', 'scoreboard')
         self.logout_button = import_image('assets', 'icons', 'logout')
         
-        buttons = [self.restart_button, self.score_button, self.scoreboard_button, self.logout_button]
-        button_positions = calculate_button_positions(buttons, WINDOW_WIDTH, WINDOW_HEIGHT, vertical_offset=200)
-
-        self.restart_button_rect = self.restart_button.get_rect(topleft=button_positions[0])
-        self.score_button_rect = self.score_button.get_rect(topleft=button_positions[1])
-        self.scoreboard_button_rect = self.scoreboard_button.get_rect(topleft=button_positions[2])
-        self.logout_button_rect = self.logout_button.get_rect(topleft=button_positions[3])
+        # Defina as posições dos botões
+        self.restart_button_rect = self.restart_button.get_rect(center=(WINDOW_WIDTH // 2 - 60, WINDOW_HEIGHT // 2 + 150))
+        self.logout_button_rect = self.logout_button.get_rect(center=(WINDOW_WIDTH // 2 + 60, WINDOW_HEIGHT // 2 + 150))
         
         self.gameover_sound = pygame.mixer.Sound(join('assets', 'sounds', 'gameover.wav'))
         self.gameover_sound.set_volume(0.5)
@@ -64,20 +61,34 @@ class Game():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
+                    
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1: # Verifica se o botão esquerdo do mouse foi pressionado
                     self.handle_click(event.pos)
                     
-                    if self.restart_button_rect.collidepoint(event.pos):
-                        self.restart_game()
-                    
+                    if self.game_over:
+                        if self.restart_button_rect.collidepoint(event.pos):
+                            self.restart_game()
+                        
+                        if self.logout_button_rect.collidepoint(event.pos):
+                            pygame.quit()
+                            exit()
+                        
             self.draw_window()  # Desenha a janela do jogo
             
             if self.waiting and pygame.time.get_ticks() >= self.wait_time: # Verifica se é hora de verificar as cartas correspondentes
                 self.check_matching_cards()
                 
             if all(card['matched'] for card in self.cards):
-                self.game_over = True   
-            
+                self.game_over = True  
+                 
+    def draw_text(self, text, font_size, color):
+        font_path = join('assets', 'fonts', 'BM_Pixel.otf')
+        font = pygame.font.Font(font_path, font_size)
+        text_surface = font.render(text, True, color)
+        text_rect = text_surface.get_rect()
+        text_rect.center = (WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2)  # Centraliza o texto na tela
+        self.display_surface.blit(text_surface, text_rect)
+
     def draw_window(self):
         self.display_surface.fill(STEELBLUE)   # Preenche o fundo da janela com uma cor definida   
 
@@ -99,12 +110,11 @@ class Game():
                 
         if self.game_over:
             self.display_surface.fill(STEELBLUE)
-            
+            self.draw_text("V I C T O R Y !", 100, BLACK)
+
             # Draw buttons
-            self.display_surface.blit(self.restart_button, self.restart_button_rect.topleft)
-            self.display_surface.blit(self.score_button, self.score_button_rect.topleft)
-            self.display_surface.blit(self.scoreboard_button, self.scoreboard_button_rect.topleft)
-            self.display_surface.blit(self.logout_button, self.logout_button_rect.topleft)
+            self.display_surface.blit(self.restart_button, self.restart_button_rect)
+            self.display_surface.blit(self.logout_button, self.logout_button_rect)
             
             if all(card['matched'] for card in self.cards):
                 if not self.game_over:  # Adicione essa verificação
@@ -115,9 +125,7 @@ class Game():
                 self.gameover_sound.play()
                 self.game_over_sound_played = True  # Atualiza a flag
             
-            
         pygame.display.update()  # Atualiza a tela do display
-         
         
     def init_cards(self):
         lista_imagens = self.matching * 2  # Dobra a lista de imagens para criar pares de cartas
@@ -130,8 +138,8 @@ class Game():
                 card = {
                     'image': pygame.transform.scale(lista_imagens[index], (IMAGE_WIDTH, IMAGE_HEIGHT)), # Redimensiona a imagem da carta
                     'position': coordenada,
-                    'revealed': True,  # Inicialmente, todas as cartas estão viradas para baixo
-                    'matched': True,   # Inicialmente, nenhuma carta foi combinada
+                    'revealed': False,  # Inicialmente, todas as cartas estão viradas para baixo
+                    'matched': False,   # Inicialmente, nenhuma carta foi combinada
                 }
 
                 index += 1
@@ -181,6 +189,8 @@ class Game():
     def restart_game(self):
         self.cards = self.init_cards()
         self.selected_cards = []
+        self.game_over = False
+        self.game_over_sound_played = False
         
 if __name__== "__main__":
     game = Game() # Cria uma instância do jogo

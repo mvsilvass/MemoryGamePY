@@ -48,7 +48,10 @@ class Game():
         self.game_over_sound_played = False  
         
         self.select_click_sound = pygame.mixer.Sound(join('assets', 'sounds', 'select_click.wav'))
-        self.select_click_sound.set_volume(0.010)
+        self.select_click_sound.set_volume(0.25)
+        
+        self.correct_sound = pygame.mixer.Sound(join('assets', 'sounds', 'correct.wav'))
+        self.correct_sound.set_volume(0.5)
         
         self.game_over = False
         
@@ -162,6 +165,7 @@ class Game():
                 # Se as cartas forem iguais, marca ambas como 'matched' (combinadas)
                 card1['matched'] = True
                 card2['matched'] = True
+                self.correct_sound.play()
             else:
                 # Se as cartas não forem iguais, vira ambas de volta
                 card1['revealed'] = False
